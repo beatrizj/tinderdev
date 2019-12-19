@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import logo from '../assets/logo.png'
 import like from '../assets/like.png'
 import dislike from '../assets/dislike.png'
+import itsamatch from '../assets/itsamatch.png'
 import './Main.css'
 import api from '../services/api'
 import { Link } from 'react-router-dom'
@@ -10,6 +11,7 @@ import io from 'socket.io-client'
 
 export default function Main({ match }) {
     const [users, setUsers] = useState([])
+    const [matchDev, setMatchDev] = useState(null)
 
     useEffect(() => {
         async function loadUsers() {
@@ -28,7 +30,7 @@ export default function Main({ match }) {
         })
 
         socket.on('match', dev => {
-            console.log(dev)
+            setMatchDev(dev)
         })
     }, [match.params.id])
 
@@ -78,7 +80,18 @@ export default function Main({ match }) {
                     <div className='empty'>
                         Acabou :(
                     </div>
-                )}                        
+                )}  
+
+                { matchDev && (
+                    <div className='match-container'>
+                        <img src={itsamatch} alt="It's a match" />
+                        <img className='avatar' src={matchDev.avatar} alt="" />
+                        <strong>{matchDev.name}</strong>
+                        <p>{matchDev.bio}</p>
+
+                        <button type='button' onClick={() => setMatchDev(null)}>Fechar</button>
+                    </div>
+                )}                      
         </div>
     )
 }
